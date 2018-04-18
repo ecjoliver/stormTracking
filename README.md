@@ -6,7 +6,7 @@ Automated detection and tracking of storms and anticyclones, given a series of m
 
 File                 |Description
 ---------------------|----------
-|storm_detection.py    | Code for the detection of storms given a series of sea level maps|
+|storm_detection.py    | Code for the detection of storms given a series of mean sea level pressure maps|
 |storm_tracking.py     | Code for the tracking of storms after detection has been performed|
 |storm_census.py       | Code for calculating census statistics of tracked storms|
 |storm_plot.py         | Code for plotting storm tracks|
