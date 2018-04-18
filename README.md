@@ -25,10 +25,9 @@ The next step is to run the storm_tracking.py script which will load in the dete
 This code as been applied to 6-hourly mean sea level pressure maps from NCEP Twentieth Century Reanalysis (20CR). The code at the top of storm_detection.py will need to be modified for use with another data source, as will various other function options as necessary (e.g. time step, grid resolution, etc).
 
 ## Contact                                                                                                          
-Eric C. J. Oliver
-Department of Oceanography
-Dalhousie University
-Halifax, Nova Scotia, Canada
-e: eric.oliver@dal.ca
-w: http://ecjoliver.weeblyl.com
-https://github.com/ecjoliver
+Eric C. J. Oliver  
+Department of Oceanography  
+Dalhousie University  
+Halifax, Nova Scotia, Canada  
+e: eric.oliver@dal.ca  
+w: http://ecjoliver.weebly.com, https://github.com/ecjoliver
