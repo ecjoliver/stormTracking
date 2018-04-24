@@ -8,9 +8,10 @@ File                 |Description
 ---------------------|----------
 |storm_detection.py    | Code for the detection of storms given a series of mean sea level pressure maps|
 |storm_tracking.py     | Code for the tracking of storms after detection has been performed|
-|storm_census.py       | Code for calculating census statistics of tracked storms|
-|storm_plot.py         | Code for plotting storm tracks|
+|storm_plot.py         | Code for plotting storm tracks (see figures)|
+|storm_census.py       | Code for calculating census statistics of tracked storms (see figures)|
 |storm_functions.py    | Module of supporting functions|
+|figures/              | Folder containing figures of storm tracks and census plots based on 20CR data|
 
 ## Algorithm
 
@@ -22,7 +23,7 @@ The next step is to run the storm_tracking.py script which will load in the dete
 
 ## Notes
 
-This code as been applied to 6-hourly mean sea level pressure maps from NCEP Twentieth Century Reanalysis (20CR). The code at the top of storm_detection.py will need to be modified for use with another data source, as will various other function options as necessary (e.g. time step, grid resolution, etc).
+This code as been applied to 6-hourly mean sea level pressure maps from NCEP Twentieth Century Reanalysis (20CR). The code at the top of storm_detection.py will need to be modified for use with another data source, as will various other function options as necessary (e.g. time step, grid resolution, etc). The data files for the storm detection and storm tracks from 20CR, for use in the storm_plot.py and storm_census.py scripts, can be obtained here: [storm_det_slp.npz](http://passage.phys.ocean.dal.ca/~olivere/data/storm_det_slp.npz), [storm_track_slp.npz](http://passage.phys.ocean.dal.ca/~olivere/data/storm_track_slp.npz).
 
 ## Contact                                                                                                          
 Eric C. J. Oliver  
