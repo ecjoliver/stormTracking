@@ -322,6 +322,11 @@ def strip_storms(tracked_storms, dt, d_tot_min=1000., d_ratio=0.6, dur_min=72):
      2. A total track length <= d_tot_min (short tracks)
      3. A start-to-end straight-line distance that is less than d_ratio
         times the total track length (meandering tracks).
+
+    Use d_tot_min = 0, d_ratio = 0 and/or dur_min = 0 to avoid stripping out
+    storms due to these criteria. It is recommended to use dur_min >= 6 or 12
+    hours in order to remove a significant number of "storms" that appear due
+    to high-frequency synoptic variability in the data.
     '''
 
     stripped_storms = []

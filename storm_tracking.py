@@ -15,7 +15,7 @@ import storm_functions as storm
 #
 
 # Load in detected positions and date/hour information
-filename = 'storm_det_slp'
+filename = '/home/oliver/data/stormTracking/20CR/storm_det_slp'
 data = np.load(filename + '.npz')
 det_storms = data['storms']
 year = data['year']
@@ -40,7 +40,7 @@ for ed in range(len(storms)):
     storms[ed]['age'] = len(storms[ed]['lon'])
 
 # Strip storms based on track lengths
-storms = storm.strip_storms(storms, dt=6)
+storms = storm.strip_storms(storms, dt=6, d_tot_min=0., d_ratio=0., dur_min=12)
 
 # Save tracked storm data
 np.savez('storm_track_slp', storms=storms)

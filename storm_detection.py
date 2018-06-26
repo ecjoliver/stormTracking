@@ -9,6 +9,7 @@
 #
 
 import numpy as np
+from datetime import date
 from netCDF4 import Dataset
 
 from matplotlib import pyplot as plt
@@ -19,34 +20,61 @@ import storm_functions as storm
 # Load in slp data and lat/lon coordinates
 #
 
+dataset = 'NCEP_20CRV2C'
+dataset = 'NCEP_R1'
+dataset = 'NCEP_CFSR'
+
 # Parameters
-pathroot = '/home/oliver/data/NCEP/20CRv2c/prmsl/6hourly/'
+pathroot = {'NCEP_20CRV2C': '/home/oliver/data/NCEP/20CRv2c/prmsl/6hourly/', 'NCEP_R1': '/home/oliver/data/NCEP/R1/slp/', 'NCEP_CFSR': '/home/oliver/data/NCEP/CFSR/prmsl/'}
+var = {'NCEP_20CRV2C': 'prmsl', 'NCEP_R1': 'slp', 'NCEP_CFSR': 'PRMSL_L101'}
 
 # Generate date and hour vectors
-yearStart = 1851
-yearEnd = 2014
-t, dates, T, year, month, day, doy = storm.timevector([yearStart,1,1], [yearEnd,12,31]) # Daily
-year = np.repeat(year, 4) # 6-hourly
-month = np.repeat(month, 4) # 6-hourly
-day = np.repeat(day, 4) # 6-hourly
-hour = np.tile(np.array([0, 6, 12, 18]), T) # 6-hourly
+yearStart = {'NCEP_20CRV2C': 1851, 'NCEP_R1': 1948, 'NCEP_CFSR': 1979}
+yearEnd = {'NCEP_20CRV2C': 2014, 'NCEP_R1': 2017, 'NCEP_CFSR': 1979}
 
 # Load lat, lon
-filename = pathroot + 'prmsl.' + str(yearStart) + '.nc'
-fileobj = Dataset(filename, 'r')
+filename = {'NCEP_20CRV2C': pathroot['NCEP_20CRV2C'] + 'prmsl.' + str(yearStart['NCEP_20CRV2C']) + '.nc',
+            'NCEP_R1': pathroot['NCEP_R1'] + 'slp.' + str(yearStart['NCEP_R1']) + '.nc',
+            'NCEP_CFSR': pathroot['NCEP_CFSR'] + 'prmsl.gdas.' + str(yearStart['NCEP_CFSR']) + '01.grb2.nc'}
+fileobj = Dataset(filename[dataset], 'r')
 lon = fileobj.variables['lon'][:].astype(float)
 lat = fileobj.variables['lat'][:].astype(float)
 fileobj.close()
 
 # Load slp data
 slp = np.zeros((0, len(lat), len(lon)))
-for yr in range(yearStart, yearEnd+1):
-    fileobj = Dataset(filename, 'r')
-    filename = pathroot + 'prmsl.' + str(yr) + '.nc'
-    slp0 = fileobj.variables['prmsl'][:].astype(float)
-    slp = np.append(slp, slp0, axis=0)
-    fileobj.close()
-    print yr, slp0.shape[0]
+year = np.zeros((0,))
+month = np.zeros((0,))
+day = np.zeros((0,))
+hour = np.zeros((0,))
+for yr in range(yearStart[dataset], yearEnd[dataset]+1):
+    if (dataset == 'NCEP_20CRV2C') + (dataset == 'NCEP_R1'):
+        filename = {'NCEP_20CRV2C': pathroot['NCEP_20CRV2C'] + 'prmsl.' + str(yr) + '.nc', 'NCEP_R1': pathroot['NCEP_R1'] + 'slp.' + str(yr) + '.nc'}
+        fileobj = Dataset(filename[dataset], 'r')
+        time = fileobj.variables['time'][:]
+        time_ordinalDays = time/24. + date(1800,1,1).toordinal()
+        year = np.append(year, [date.fromordinal(np.floor(time_ordinalDays[tt]).astype(int)).year for tt in range(len(time))])
+        month = np.append(month, [date.fromordinal(np.floor(time_ordinalDays[tt]).astype(int)).month for tt in range(len(time))])
+        day = np.append(day, [date.fromordinal(np.floor(time_ordinalDays[tt]).astype(int)).day for tt in range(len(time))])
+        hour = np.append(hour, (np.mod(time_ordinalDays, 1)*24).astype(int))
+        slp0 = fileobj.variables[var[dataset]][:].astype(float)
+        slp = np.append(slp, slp0, axis=0)
+        fileobj.close()
+        print yr, slp0.shape[0]
+    if dataset == 'NCEP_CFSR':
+        for mth in range(1, 12+1):
+            filename = {'NCEP_CFSR': pathroot['NCEP_CFSR'] + 'prmsl.gdas.' + str(yr) + str(mth).zfill(2) + '.grb2.nc'}
+            fileobj = Dataset(filename[dataset], 'r')
+            time = fileobj.variables['time'][:]
+            time_ordinalDays = time/24. + date(yr,mth,1).toordinal()
+            year = np.append(year, [date.fromordinal(np.floor(time_ordinalDays[tt]).astype(int)).year for tt in range(len(time))])
+            month = np.append(month, [date.fromordinal(np.floor(time_ordinalDays[tt]).astype(int)).month for tt in range(len(time))])
+            day = np.append(day, [date.fromordinal(np.floor(time_ordinalDays[tt]).astype(int)).day for tt in range(len(time))])
+            hour = np.append(hour, (np.mod(time_ordinalDays, 1)*24).astype(int))
+            slp0 = fileobj.variables[var[dataset]][:].astype(float)
+            slp = np.append(slp, slp0, axis=0)
+            fileobj.close()
+            print yr, mth, slp0.shape[0]
 
 #
 # Storm Detection
