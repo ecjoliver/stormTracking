@@ -277,10 +277,10 @@ def track_storms(storms, det_storms, tt, year, month, day, hour, dt, prop_speed=
                 storms[ed]['lon'] = np.append(storms[ed]['lon'], det_storms[tt]['lon'][next_storm])
                 storms[ed]['lat'] = np.append(storms[ed]['lat'], det_storms[tt]['lat'][next_storm])
                 storms[ed]['amp'] = np.append(storms[ed]['amp'], det_storms[tt]['amp'][next_storm])
-                storms[ed]['year'] = np.append(storms[ed]['year'], year[tt+1])
-                storms[ed]['month'] = np.append(storms[ed]['month'], month[tt+1])
-                storms[ed]['day'] = np.append(storms[ed]['day'], day[tt+1])
-                storms[ed]['hour'] = np.append(storms[ed]['hour'], hour[tt+1])
+                storms[ed]['year'] = np.append(storms[ed]['year'], year[tt])
+                storms[ed]['month'] = np.append(storms[ed]['month'], month[tt])
+                storms[ed]['day'] = np.append(storms[ed]['day'], day[tt])
+                storms[ed]['hour'] = np.append(storms[ed]['hour'], hour[tt])
     
                 # Remove detected storm from list of storms available for assigment to existing trajectories
     
@@ -303,10 +303,10 @@ def track_storms(storms, det_storms, tt, year, month, day, hour, dt, prop_speed=
             storm_tmp['lat'] = np.array([det_storms[tt]['lat'][un]])
             storm_tmp['amp'] = np.array([det_storms[tt]['amp'][un]])
             storm_tmp['type'] = det_storms[tt]['type'][un]
-            storm_tmp['year'] = year[tt+1]
-            storm_tmp['month'] = month[tt+1]
-            storm_tmp['day'] = day[tt+1]
-            storm_tmp['hour'] = hour[tt+1]
+            storm_tmp['year'] = year[tt]
+            storm_tmp['month'] = month[tt]
+            storm_tmp['day'] = day[tt]
+            storm_tmp['hour'] = hour[tt]
             storm_tmp['exist_at_start'] = False
             storm_tmp['terminated'] = False
             storms.append(storm_tmp)
