@@ -1,6 +1,6 @@
 # stormTracking
 
-Automated detection and tracking of atmospheric storms (cyclones) and high-pressure systems (anticyclones), given a series of mean sea level pressure maps.
+Automated detection and tracking of atmospheric storms (cyclones) and high-pressure systems (anticyclones), given a series of mean sea level pressure maps. Developed as an adaptation of similar [mesoscale ocean eddy tracking code](https://github.com/ecjoliver/eddyTracking) and with modifications based on collaboration with Rebekah Cavanagh (Dalhousie University).
 
 ## Code Description
 
