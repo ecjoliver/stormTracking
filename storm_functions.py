@@ -105,7 +105,7 @@ def detect_storms(field, lon, lat, res, Npix_min, cyc, globe=False):
  
     # 3. Detect presence of local maximum (minimum) for anticylones (cyclones), reject if non-existent
             interior = ndimage.binary_erosion(region)
-            exterior = region.astype(bool) - interior
+            exterior = np.subtract(region.astype(bool), interior, dtype=np.int16)
             if interior.sum() == 0:
                 continue
             if cyc == 'anticyclonic':
