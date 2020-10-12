@@ -9,6 +9,7 @@
 
 import numpy as np
 import storm_functions as storm
+import glob
 
 #
 # Automated storm tracking
@@ -16,12 +17,33 @@ import storm_functions as storm
 
 # Load in detected positions and date/hour information
 filename = '/home/oliver/data/stormTracking/20CR/storm_det_slp'
-data = np.load(filename + '.npz')
-det_storms = data['storms']
-year = data['year']
-month = data['month']
-day = data['day']
-hour = data['hour']
+filenames = sorted(glob.glob('/home/williamsjh/stormTracking/storm_det_slp*'))
+
+firstiteration = True
+
+for filename in filenames:
+
+    print(filename)
+
+    data = np.load(filename, allow_pickle=True)
+
+    if firstiteration:
+
+        det_storms = data['storms']
+        year = data['year']
+        month = data['month']
+        day = data['day']
+        hour = data['hour']
+
+    else:
+
+        det_storms = np.concatenate((det_storms, data['storms']))
+        year = np.concatenate((year, data['year']))
+        month = np.concatenate((month, data['month']))
+        day = np.concatenate((day, data['day']))
+        hour = np.concatenate((hour, data['hour']))
+
+    firstiteration = False  
 
 # Initialize storms discovered at first time step
 
@@ -31,7 +53,7 @@ storms = storm.storms_init(det_storms, year, month, day, hour)
 
 T = len(det_storms) # number of time steps
 for tt in range(1, T-1):
-    print tt, T
+    print(tt, T)
     # Track storms from time step tt-1 to tt and update corresponding tracks and/or create new storms
     storms = storm.track_storms(storms, det_storms, tt, year, month, day, hour, dt=6)
 

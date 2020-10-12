@@ -16,21 +16,30 @@ from matplotlib import pyplot as plt
 
 import storm_functions as storm
 
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--startyear', required=True, type=int)
+
+args = parser.parse_args()
+startyear=args.startyear
+print('startyear = ', startyear)
+
 #
 # Load in slp data and lat/lon coordinates
-#
+
 
 dataset = 'NCEP_20CRV2C'
-dataset = 'NCEP_R1'
-dataset = 'NCEP_CFSR'
+#dataset = 'NCEP_R1'
+#dataset = 'NCEP_CFSR'
 
 # Parameters
-pathroot = {'NCEP_20CRV2C': '/home/oliver/data/NCEP/20CRv2c/prmsl/6hourly/', 'NCEP_R1': '/home/oliver/data/NCEP/R1/slp/', 'NCEP_CFSR': '/home/oliver/data/NCEP/CFSR/prmsl/'}
+pathroot = {'NCEP_20CRV2C': '/nesi/project/niwa00013/williamsjh/NZESM/storm/data/NCEP/20CRv2c/prmsl/6hourly/', 'NCEP_R1': '/home/oliver/data/NCEP/R1/slp/', 'NCEP_CFSR': '/home/oliver/data/NCEP/CFSR/prmsl/'}
 var = {'NCEP_20CRV2C': 'prmsl', 'NCEP_R1': 'slp', 'NCEP_CFSR': 'PRMSL_L101'}
 
 # Generate date and hour vectors
-yearStart = {'NCEP_20CRV2C': 1851, 'NCEP_R1': 1948, 'NCEP_CFSR': 1979}
-yearEnd = {'NCEP_20CRV2C': 2014, 'NCEP_R1': 2017, 'NCEP_CFSR': 1979}
+yearStart = {'NCEP_20CRV2C': startyear, 'NCEP_R1': 1948, 'NCEP_CFSR': 1979}
+yearEnd = {'NCEP_20CRV2C': startyear, 'NCEP_R1': 2017, 'NCEP_CFSR': 1979}
 
 # Load lat, lon
 filename = {'NCEP_20CRV2C': pathroot['NCEP_20CRV2C'] + 'prmsl.' + str(yearStart['NCEP_20CRV2C']) + '.nc',
@@ -60,7 +69,7 @@ for yr in range(yearStart[dataset], yearEnd[dataset]+1):
         slp0 = fileobj.variables[var[dataset]][:].astype(float)
         slp = np.append(slp, slp0, axis=0)
         fileobj.close()
-        print yr, slp0.shape[0]
+        print(yr, slp0.shape[0])
     if dataset == 'NCEP_CFSR':
         for mth in range(1, 12+1):
             filename = {'NCEP_CFSR': pathroot['NCEP_CFSR'] + 'prmsl.gdas.' + str(yr) + str(mth).zfill(2) + '.grb2.nc'}
@@ -74,7 +83,7 @@ for yr in range(yearStart[dataset], yearEnd[dataset]+1):
             slp0 = fileobj.variables[var[dataset]][:].astype(float)
             slp = np.append(slp, slp0, axis=0)
             fileobj.close()
-            print yr, mth, slp0.shape[0]
+            print(yr, mth, slp0.shape[0])
 
 #
 # Storm Detection
@@ -95,7 +104,7 @@ T = slp.shape[0]
 
 for tt in range(T):
     #
-    print tt, T
+    print(tt, T)
     #
     # Detect lon and lat coordinates of storms
     #
@@ -112,10 +121,10 @@ for tt in range(T):
     # Save as we go
     #
     if (np.mod(tt, 100) == 0) + (tt == T-1):
-        print 'Save data...'
+        print('Save data...')
     #
     # Combine storm information from all days into a list, and save
     #
         storms = storm.storms_list(lon_storms_a, lat_storms_a, amp_storms_a, lon_storms_c, lat_storms_c, amp_storms_c)
-        np.savez('storm_det_slp', storms=storms, year=year, month=month, day=day, hour=hour)
+        np.savez('storm_det_slp_'+str(startyear), storms=storms, year=year, month=month, day=day, hour=hour)
 

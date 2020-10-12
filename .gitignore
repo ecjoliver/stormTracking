@@ -1,0 +1,6 @@
+*.npz
+*.sl
+*.out
+*.err
+*.pyc
+__pycache__
