@@ -40,7 +40,7 @@ for ed in range(len(storms)):
         lonproj, latproj = proj(storms[ed]['lon'], storms[ed]['lat'])
         plt.plot(lonproj, latproj, 'r-', linewidth=1, alpha=0.25)
 plt.title('Storm tracks (Nov-Mar, 1950-1960)')
-plt.savefig('storm_plot_figures/storm_tracks_NorthernHemisphere', bbox_inches='tight', pad_inches=0.05, dpi=300)
+# plt.savefig('figures/storm_tracks_NorthernHemisphere', bbox_inches='tight', pad_inches=0.05, dpi=300)
 
 # South Pole
 plt.clf()
@@ -64,7 +64,7 @@ for ed in range(len(storms)):
         lonproj, latproj = proj(storms[ed]['lon'], storms[ed]['lat'])
         plt.plot(lonproj, latproj, 'r-', linewidth=1, alpha=0.25)
 plt.title('Storm tracks (Nov-Mar, 1950-1960)')
-plt.savefig('storm_plot_figures/storm_tracks_SouthernHemisphere', bbox_inches='tight', pad_inches=0.05, dpi=300)
+# plt.savefig('figures/storm_tracks_SouthernHemisphere', bbox_inches='tight', pad_inches=0.05, dpi=300)
 
 # Regional zoom in on the NW Atlantic
 plt.figure()
@@ -77,7 +77,7 @@ for ed in range(len(storms)):
         lonproj, latproj = proj(storms[ed]['lon'], storms[ed]['lat'])
         plt.plot(lonproj, latproj, '-', linewidth=1, alpha=0.6)
 plt.title('Storm tracks (2000-2005)')
-plt.savefig('storm_plot_figures/storm_tracks_NorthwestAtlantic', bbox_inches='tight', pad_inches=0.05, dpi=300)
+# plt.savefig('figures/storm_tracks_NorthwestAtlantic', bbox_inches='tight', pad_inches=0.05, dpi=300)
 
 # Genesis and termination locations
 plt.clf()
@@ -91,7 +91,7 @@ for ed in range(len(storms)):
         plt.plot(lonproj[-1], latproj[-1], 'ro', alpha=0.5, markeredgewidth=0) # End point
 plt.legend(['Genesis', 'Termination'], loc='lower right')
 plt.title('Storm genesis and termination locations (2000-2010)')
-plt.savefig('storm_plot_figures/storm_genesisAndTermination_NorthwestAtlantic', bbox_inches='tight', pad_inches=0.05, dpi=300)
+# plt.savefig('figures/storm_genesisAndTermination_NorthwestAtlantic', bbox_inches='tight', pad_inches=0.05, dpi=300)
 
 # Only storms which originated in the Mar 1855 or Mar 2010, with central pressures indicated
 plt.figure()
@@ -120,4 +120,4 @@ for ed in range(len(storms)):
 H = plt.colorbar()
 H.set_label('Central pressure [Pa]')
 plt.title('Storms starting in Mar''2010')
-plt.savefig('storm_plot_figures/storm_CentralPressures_March_1855_2010', bbox_inches='tight', pad_inches=0.05, dpi=300)
+# plt.savefig('figures/storm_CentralPressures_March_1855_2010', bbox_inches='tight', pad_inches=0.05, dpi=300)

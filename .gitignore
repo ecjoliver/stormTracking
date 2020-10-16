@@ -1,5 +1,4 @@
 *.npz
-*.sl
 *.out
 *.err
 *.pyc

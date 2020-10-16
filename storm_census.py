@@ -10,6 +10,10 @@
 #
 
 import numpy as np
+import cartopy.crs as ccrs
+
+import cf_units
+import cartopy.feature as cfeature
 from matplotlib import pyplot as plt
 import mpl_toolkits.basemap as bm
 
@@ -17,7 +21,7 @@ import mpl_toolkits.basemap as bm
 # Load storm data
 #
 
-data = np.load('storm_track.npz')
+data = np.load('/nesi/project/niwa00013/williamsjh/NZESM/storm/data/NCEP/20CRv2c/prmsl/6hourly/storm_track_slp.npz', allow_pickle = True)
 storms = data['storms']
 
 #
@@ -58,7 +62,7 @@ ampc = np.zeros(DIM)
 ampa = np.zeros(DIM)
 
 for ed in range(len(storms)):
-    print ed, len(storms)
+    print(ed, len(storms))
     if (storms[ed]['age'] >= age_min ):
         for t in range(storms[ed]['age']):
             i = np.where((lon > storms[ed]['lon'][t]-1) * (lon < storms[ed]['lon'][t]))[0]
@@ -116,79 +120,112 @@ proj = bm.Basemap(projection='robin', lon_0=180, resolution='c')
 lonproj, latproj = proj(llon, llat)
 
 # Distribution of cyclone tracks and intensity (and for anticyclones)
-plt.figure()
-plt.clf()
-plt.subplot(2,2,1)
-proj.drawcoastlines(linewidth=0.5)
-plt.contourf(lonproj, latproj, Nc_unique, levels=np.append(np.arange(0, 250+1, 25), 10000), cmap=plt.cm.hot_r)
+# map projection i want to use
+crs = ccrs.Robinson()
+
+plt.figure(figsize=[15,15])
+
+ax1 = plt.subplot(2,2,1,projection=ccrs.Robinson(central_longitude=180))
+ax1.coastlines(linewidth = 0.5)
+ax1.add_feature(cfeature.RIVERS)
+plt.contourf(llon, llat, Nc_unique, levels=np.append(np.arange(0, 250+1, 25), 10000), cmap=plt.cm.hot_r,
+           transform = ccrs.PlateCarree())#the transform kwarg here is the coord system of the original data
 plt.title('Count of cyclone tracks')
 H = plt.colorbar()
 H.set_label('count')
 plt.clim(0, 250)
-plt.subplot(2,2,2)
-proj.drawcoastlines(linewidth=0.5)
-plt.contourf(lonproj, latproj, ampc, 24, cmap=plt.cm.rainbow)
+
+ax2 = plt.subplot(2,2,2,projection=ccrs.Robinson(central_longitude=180))
+ax2.coastlines(linewidth = 0.5)
+ax2.add_feature(cfeature.RIVERS)
+plt.contourf(llon, llat, ampc, 24, cmap=plt.cm.rainbow, transform = ccrs.PlateCarree())
 H = plt.colorbar()
 H.set_label('Pa')
 plt.clim(95000, 101000)
 plt.title('Average cyclone central pressure')
-plt.subplot(2,2,3)
-proj.drawcoastlines(linewidth=0.5)
-plt.contourf(lonproj, latproj, Na_unique, levels=np.append(np.arange(0, 250+1, 25), 10000), cmap=plt.cm.hot_r)
+
+ax3 = plt.subplot(2,2,3,projection=ccrs.Robinson(central_longitude=180))
+ax3.coastlines(linewidth=0.5)
+ax3.add_feature(cfeature.RIVERS)
+plt.contourf(llon, llat, Na_unique, levels=np.append(np.arange(0, 250+1, 25), 10000), cmap=plt.cm.hot_r,
+             transform = ccrs.PlateCarree())
 plt.title('Count of anticyclone tracks')
 H = plt.colorbar()
 H.set_label('count')
 plt.clim(0, 250)
-plt.subplot(2,2,4)
-proj.drawcoastlines(linewidth=0.5)
-plt.contourf(lonproj, latproj, ampa, 24, cmap=plt.cm.rainbow)
+
+ax4 = plt.subplot(2,2,4,projection=ccrs.Robinson(central_longitude=180))
+ax4.coastlines()
+ax4.add_feature(cfeature.RIVERS)
+plt.contourf(llon, llat, ampa, 24, cmap=plt.cm.rainbow,transform = ccrs.PlateCarree())
 H = plt.colorbar()
 H.set_label('Pa')
 plt.clim(101000, 105000)
 plt.title('Average anticyclone central pressure')
-# plt.savefig('figures/storm_distribution.png', bbox_inches='tight', pad_inches=0.05, dpi=300)
+plt.savefig('figures/storm_distribution.png', bbox_inches='tight', pad_inches=0.05, dpi=300)
 
 #  Distribution of cyclone genesis and termination points (and for anticyclones)
-plt.figure()
-plt.clf()
-plt.subplot(2,2,1)
-proj.drawcoastlines(linewidth=0.5)
-plt.contourf(lonproj, latproj, genc, levels=np.append(np.arange(0, 40+1, 5), 500), cmap=plt.cm.hot_r)
+# map projection i want to use
+crs = ccrs.Robinson()
+
+plt.figure(figsize=[15,15])
+
+ax1 = plt.subplot(2,2,1,projection=ccrs.Robinson(central_longitude=180))
+ax1.coastlines(linewidth=0.5)
+ax1.add_feature(cfeature.RIVERS)
+plt.contourf(llon, llat, genc, levels=np.append(np.arange(0, 40+1, 5), 500), cmap=plt.cm.hot_r,
+            transform = ccrs.PlateCarree())
 plt.title('Count of cyclone genesis')
 H = plt.colorbar()
 H.set_label('count')
 plt.clim(0, 40)
-plt.subplot(2,2,2)
-proj.drawcoastlines(linewidth=0.5)
-plt.contourf(lonproj, latproj, termc, levels=np.append(np.arange(0, 40+1, 5), 500), cmap=plt.cm.hot_r)
+
+ax2 = plt.subplot(2,2,2,projection=ccrs.Robinson(central_longitude=180))
+ax2.coastlines(linewidth=0.5)
+ax2.add_feature(cfeature.RIVERS)
+plt.contourf(llon, llat, termc, levels=np.append(np.arange(0, 40+1, 5), 500), cmap=plt.cm.hot_r,
+            transform = ccrs.PlateCarree())
 plt.title('Count of cyclone termination')
 H = plt.colorbar()
 H.set_label('count')
 plt.clim(0, 40)
-plt.subplot(2,2,3)
-proj.drawcoastlines(linewidth=0.5)
-plt.contourf(lonproj, latproj, gena, levels=np.append(np.arange(0, 40+1, 5), 500), cmap=plt.cm.hot_r)
+
+ax3 = plt.subplot(2,2,3,projection=ccrs.Robinson(central_longitude=180))
+ax3.coastlines(linewidth=0.5)
+ax3.add_feature(cfeature.RIVERS)
+plt.contourf(llon, llat, gena, levels=np.append(np.arange(0, 40+1, 5), 500), cmap=plt.cm.hot_r,
+            transform = ccrs.PlateCarree())
 plt.title('Count of anticyclone genesis')
 H = plt.colorbar()
 H.set_label('count')
 plt.clim(0, 40)
-plt.subplot(2,2,4)
-proj.drawcoastlines(linewidth=0.5)
-plt.contourf(lonproj, latproj, terma, levels=np.append(np.arange(0, 40+1, 5), 500), cmap=plt.cm.hot_r)
+
+ax3 = plt.subplot(2,2,4,projection=ccrs.Robinson(central_longitude=180))
+ax3.coastlines(linewidth=0.5)
+ax3.add_feature(cfeature.RIVERS)
+plt.contourf(llon, llat, terma, levels=np.append(np.arange(0, 40+1, 5), 500), cmap=plt.cm.hot_r,
+            transform = ccrs.PlateCarree())
 plt.title('Count of anticyclone termination')
 H = plt.colorbar()
 H.set_label('count')
 plt.clim(0, 40)
-# plt.savefig('figures/storm_genesis_termination.png', bbox_inches='tight', pad_inches=0.05, dpi=300)
+plt.savefig('figures/storm_genesis_termination.png', bbox_inches='tight', pad_inches=0.05, dpi=300)
 
 # Proportion of cyclones to anticyclones
-plt.clf()
-plt.subplot(2,2,1)
-proj.drawcoastlines(linewidth=0.5)
-plt.contourf(lonproj, latproj, pcyc, 24, cmap=plt.cm.RdBu)
+# map projection i want to use
+crs = ccrs.Robinson()
+
+plt.figure(figsize=[15,15])
+
+ax1 = plt.subplot(2,2,1,projection=ccrs.Robinson(central_longitude=180))
+ax1.coastlines(linewidth=0.5)
+ax1.add_feature(cfeature.RIVERS)
+
+ax1.coastlines(linewidth=0.5)
+plt.contourf(llon, llat, pcyc, 24, cmap=plt.cm.RdBu, transform = ccrs.PlateCarree())
 plt.title('Proportion of cyclones (vs. anticyclones)')
 H = plt.colorbar()
 H.set_label('Proportion (1 = all cylones, 0 = all anticyclones)')
 plt.clim(0, 1)
-# plt.savefig('figures/storm_proportion', bbox_inches='tight', pad_inches=0.05, dpi=300)
+plt.savefig('figures/storm_proportion', bbox_inches='tight', pad_inches=0.05, dpi=300)
 
